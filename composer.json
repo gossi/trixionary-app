@@ -1,0 +1,33 @@
+{
+	"name" : "gossi/trixionary-app",
+	"description" : "Trixionary Application",
+	"type" : "keeko-app",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "gossi"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"gossi\\trixionary\\app\\" : "src"
+		}
+	},
+	"require" : {
+		"php" : ">=5.4",
+		"keeko/composer-installer" : "*"
+	},
+	"require-dev" : {
+		"composer/composer" : "@dev",
+		"keeko/core" : "dev-master",
+		"propel/propel" : "@dev"
+	},
+	"extra" : {
+		"keeko" : {
+			"app" : {
+				"title" : "Trixionary App",
+				"class" : "gossi\\trixionary\\app\\TrixionaryApplication"
+			}
+		},
+		"local": "../../"
+	}
+}
