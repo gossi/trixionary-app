@@ -1,6 +1,6 @@
 {
 	"name" : "gossi/trixionary-app",
-	"description" : "Trixionary Application",
+	"description" : "Trixionary standalone Application",
 	"type" : "keeko-app",
 	"license" : "MIT",
 	"authors" : [{
@@ -28,6 +28,6 @@
 				"class" : "gossi\\trixionary\\app\\TrixionaryApplication"
 			}
 		},
-		"local": "../../"
+		"local" : "../../"
 	}
 }

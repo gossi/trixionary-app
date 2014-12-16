@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>{{ page.getFullTitle() }}</title>
+
+<script src="{{ global.locations.app_root }}/components/jquery/dist/jquery.min.js" type="text/javascript" defer async></script>
+<script src="{{ global.locations.app_root }}/components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript" defer async></script>
+
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic" rel="stylesheet">
+<link href="{{ global.locations.app_root }}/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ global.locations.app_root }}/css/trixionary-app.css" rel="stylesheet">
+<link href="{{ global.locations.root_url }}/_keeko/modules/gossi/trixionary-client/css/trixionary.css" rel="stylesheet">
+
+{% for stylesheet in stylesheets %}
+<link href="{{ stylesheet }}" rel="stylesheet">
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}" type="text/javascript" defer async></script>
+{% endfor %}
+</head>
+<body>
+	<div class="navbar navbar-default" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{{ global.locations.app_url }}">{{ global.plattform_name }} Trixionary</a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					{% if user.getId() == -1 %}
+					<li><a href="{{ global.locations.app_url }}/login">Login</a></li>
+					{% else %}
+					<li><a href="#">{{ user.getDisplayName() }}</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	{% autoescape false %}
+	<div class="container">{{ main }}</div>
+	{% endautoescape %}
+</body>
+</html>
