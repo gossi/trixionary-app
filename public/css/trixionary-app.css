@@ -3,7 +3,7 @@ body {
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-a:focus {
+a:focus, *:focus, .btn:focus, .btn.active:focus, .btn:active:focus {
 	outline: none;
 }
 
