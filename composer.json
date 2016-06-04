@@ -4,7 +4,8 @@
 	"type" : "keeko-app",
 	"license" : "MIT",
 	"authors" : [{
-			"name" : "gossi"
+			"name" : "Thomas Gossmann",
+			"homepage" : "http://gos.si"
 		}
 	],
 	"autoload" : {
@@ -17,9 +18,14 @@
 		"keeko/composer-installer" : "*"
 	},
 	"require-dev" : {
-		"composer/composer" : "@dev",
-		"keeko/core" : "dev-master",
-		"propel/propel" : "@dev"
+		"keeko/framework" : "dev-master",
+		"keeko/core" : "@dev",
+		"propel/propel" : "@alpha",
+		"puli/repository" : "@beta",
+		"puli/composer-plugin" : "@beta",
+		"puli/twig-extension" : "@beta",
+		"puli/url-generator" : "@beta",
+		"puli/discovery" : "@beta"
 	},
 	"extra" : {
 		"keeko" : {
@@ -27,7 +33,6 @@
 				"title" : "Trixionary App",
 				"class" : "gossi\\trixionary\\app\\TrixionaryApplication"
 			}
-		},
-		"local" : "../../"
+		}
 	}
 }
