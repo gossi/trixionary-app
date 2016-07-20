@@ -1,71 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="author" content="">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	{% for meta in page.getMetas() %}
+	<meta{%if meta.getCharset() %} charset="{{ meta.getCharset() }}"{% endif %}{% if meta.getName() %} name="{{ meta.getName() }}"{% endif %}{% if meta.getHttpEquiv() %} http-equiv="{{ meta.getHttpEquiv() }}"{% endif %}{% if meta.getContent() %} content="{{ meta.getContent() }}"{% endif %}>
+	{% endfor %}
 
-<title>{{ page.getFullTitle() }}</title>
+	<title>{{ page.getFullTitle() }}</title>
+	
+	<!-- Styles -->
+	<link href="{{ resource_url("/assets/bootstrap/dist/css/bootstrap.min.css") }}" rel="stylesheet">
+	<link href="{{ resource_url("/assets/font-awesome/css/font-awesome.min.css") }}" rel="stylesheet">
+	<link href="{{ resource_url("/gossi/trixionary-app/public/css/trixionary-app.css") }}" rel="stylesheet">
+	
+	{% for link in page.getLinks() %}
+	<link{% if link.getHref() %} href="{{ resource_url(link.getHref()) }}"{% endif %}{% if link.getRel() %} rel="{{ link.getRel() }}"{% endif %}{% if link.getType() %} type="{{ link.getType() }}"{% endif %}>
+	{% endfor %}
 
-<script src="{{ global.locations.app_root }}/components/jquery/dist/jquery.min.js" type="text/javascript"></script>
-<script src="{{ global.locations.app_root }}/components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
-
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700,600,400italic" rel="stylesheet">
-<link href="{{ global.locations.app_root }}/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="{{ global.locations.app_root }}/css/trixionary-app.css" rel="stylesheet">
-<link href="{{ global.locations.root_url }}/_keeko/modules/gossi/trixionary-client/css/trixionary.css" rel="stylesheet">
-
-{% for stylesheet in stylesheets %}
-<link href="{{ stylesheet }}" rel="stylesheet">
-{% endfor %}
-{% for script in scripts %}
-<script src="{{ script }}" type="text/javascript"></script>
-{% endfor %}
 </head>
 <body>
-	<div class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> 
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{{ global.locations.app_url }}">{{ global.plattform_name }} Trixionary</a>
+				<a class="navbar-brand" href="{{ locations.app_url }}">{{ global.plattform_name }}</a>
 			</div>
-			<div class="navbar-collapse collapse">
+			<div class="collapse navbar-collapse">
+      			<ul class="nav navbar-nav">
+      				<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sports <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							{% for sport in sports %}
+							<li><a href="{{ locations.app_url }}/{% if not sport.getIsDefault() %}{{ sport.getSlug() }}{% endif %}">{{ sport.getTitle() }}</a></li>
+							{% endfor %}
+                      	</ul>
+                    </li>
+      			</ul>
 				<ul class="nav navbar-nav navbar-right">
-					{% if user.getId() == -1 %}
-					<li><a href="{{ global.locations.app_url }}/login">Login</a></li>
-					{% else %}
-					<li><a href="#">{{ user.getDisplayName() }}</a></li>
+					{% if can('gossi/trixionary-client', 'manage') %}
+					<li><a href="{{ locations.app_url }}/manage">Manage Sports</a></li>
 					{% endif %}
+					{{ account_widget|raw }}
 				</ul>
 			</div>
 		</div>
-	</div>
+	</nav>
+	
+	{% block lead %}{% endblock lead %}
 
 	{% autoescape false %}
-	<div class="container">{{ main }}</div>
+	<main class="container">
+		{{ main }}
+	</main>
 	{% endautoescape %}
 	
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
-    var u="//analytics.creative2.net/";
-    _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', 7]);
-    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<noscript><p><img src="//analytics.creative2.net/piwik.php?idsite=7" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code -->	
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					Trixionary<br>
+					<a href="{{ locations.app_url }}/help">Help</a><br>
+					<a href="{{ locations.app_url }}/info">Info</a>
+				</div>
+				<div class="col-md-4">
+					© Thomas Gossmann
+				</div>
+				<div class="col-md-4">
+					<a href="{{ locations.developer_url }}">Developer</a>
+				</div>
+			</div>
+		</div>
+    </footer>
+
+	<!-- Scripts -->
+	<script src="{{ resource_url("/assets/jquery/jquery.min.js") }}" type="text/javascript"></script>
+	<script src="{{ resource_url("/assets/bootstrap/dist/js/bootstrap.min.js") }}" type="text/javascript"></script>
+	{% for script in page.getScripts() %}
+	<script{% if script.getSrc() %} src="{{ resource_url(script.getSrc()) }}"{% endif %}{% if script.getType() %} type="{{ script.getType() }}"{% endif %}></script>
+	{% endfor %}
 </body>
 </html>

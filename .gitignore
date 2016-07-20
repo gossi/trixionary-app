@@ -1,4 +1,5 @@
 .buildpath
 .puli/
 composer.phar
+composer.lock
 vendor/

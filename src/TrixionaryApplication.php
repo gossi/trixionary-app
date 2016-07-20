@@ -1,16 +1,19 @@
 <?php
 namespace gossi\trixionary\app;
 
-use keeko\core\application\AbstractApplication;
+use keeko\framework\foundation\AbstractApplication;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Cookie;
-use keeko\core\exceptions\PermissionDeniedException;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use gossi\trixionary\model\SportQuery;
 
 /**
  * Trixionary App
- * 
+ *
  * @license MIT
  * @author gossi
  */
@@ -21,68 +24,77 @@ class TrixionaryApplication extends AbstractApplication {
 	 * @param string $path
 	 */
 	public function run(Request $request) {
-		try {
-			if ($this->getDestinationPath() == '/login') {
-				$main = $this->login($request);
-			} else {
-				$moduleManager = $this->getServiceContainer()->getModuleManager();
-				$client = $moduleManager->load('gossi/trixionary-client');
-				$router = $client->loadAction('router', 'html');
-				$main = $this->runAction($router, $request);
-			}
-			
-			if ($main instanceof RedirectResponse) {
-				return $main;
-			}
-		} catch (PermissionDeniedException $e) {
-			$main = new Response('<h1>Permission Denied</h1><p>' .$e->getMessage() . '</p>');
-		}
-		
-		$prefs = $this->getServiceContainer()->getPreferenceLoader()->getSystemPreferences();
-		$this->getPage()->setDefaultTitle($prefs->getPlattformName() . ' Trixionary');
-		$this->getPage()->setTitleSuffix('· ' . $prefs->getPlattformName() . ' Trixionary');
+		$kernel = $this->getServiceContainer()->getKernel();
+		$account = $this->getServiceContainer()->getModuleManager()->load('keeko/account');
+		$trixionary = $this->getServiceContainer()->getModuleManager()->load('gossi/trixionary-client');
 
-		return $this->render('main.twig', [
-			'main' => $main->getContent(),
-			'page' => $this->getPage(),
-			'stylesheets' => $this->getPage()->getStyles(),
-			'scripts' => $this->getPage()->getScripts()
-		]);
-	}
-	
-	public function getTargetPath() {
-		return '';
-	}
-	
-	private function login(Request $request) {
-		$username = '';
-		$error = '';
-		$redirect = $request->headers->get('referer');
-		
-		// try login
-		if ($request->isMethod('POST')) {
-			$username = $request->request->get('username');
-			$password = $request->request->get('password');
-			$redirect = $request->request->get('redirect');
-			
-			$auth = $this->getServiceContainer()->getAuthManager();
-			if ($auth->login($username, $password)) {
-				$token = $auth->getAuth()->getToken();
-				$foward = $redirect ?: $this->getAppUrl();
-				$response = new RedirectResponse($foward);
-				$response->headers->setCookie(new Cookie('Bearer', $token));
+		$widget = $account->loadAction('account-widget', 'html');
+		$widget = $kernel->handle($widget, $request);
+
+		$this->getPage()->setDefaultTitle('Trixionary');
+		$this->getPage()->setTitlePrefix('Trixionary:');
+
+		try {
+			$routes = $this->generateRoutes();
+			$context = new RequestContext($this->getBaseUrl());
+			$matcher = new UrlMatcher($routes, $context);
+
+			$match = $matcher->match($this->getDestination());
+			$route = $match['_route'];
+			$action = null;
+
+			switch ($route) {
+				case 'account':
+				case 'account-index':
+					$action = $account->loadAction('account', 'html');
+					$action->setBaseUrl($this->getBaseUrl() . '/account');
+					$action->setDestination(str_replace($action->getBaseUrl(), '', $request->getUri()));
+					break;
+
+				case 'trixionary':
+				default:
+					$action = $trixionary->loadAction('trixionary');
+					$action->setBaseUrl($this->getBaseUrl());
+					$action->setDestination($this->getDestination());
+					break;
+			}
+
+			$kernel = $this->getServiceContainer()->getKernel();
+			$response = $kernel->handle($action, $request);
+
+			if ($response instanceof RedirectResponse) {
 				return $response;
 			}
-			
-			$error = 'Invalid credentials';
+
+			$main = $response->getContent();
+		} catch (PermissionDeniedException $e) {
+			$main = 'Permission Denied';
+		} catch (\Exception $e) {
+			$main = 'Error: ' . $e->getMessage();
 		}
-		
-		$twig = $this->getTwig();
-		return new Response($twig->render('login.twig', [
-				'error' => $error,
-				'base' => $this->getAppUrl(),
-				'redirect' => $redirect,
-				'username' => $username
-			]));
+
+
+		$sports = SportQuery::create()->orderByTitle()->find();
+		$response = new Response();
+		$response->setContent($this->render('/gossi/trixionary-app/templates/main.twig', [
+			'account_widget' => $widget->getContent(),
+			'main' => $main,
+			'sports' => $sports
+		]));
+
+		return $response;
+	}
+
+	/**
+	 *
+	 * @return RouteCollection
+	 */
+	private function generateRoutes() {
+		$routes = new RouteCollection();
+		$routes->add('account-index', new Route('/account'));
+		$routes->add('account', new Route('/account/{suffix}', ['suffix' => ''], ['suffix' => '.*']));
+		$routes->add('trixionary', new Route('/{suffix}', ['suffix' => ''], ['suffix' => '.*']));
+
+		return $routes;
 	}
 }

@@ -15,7 +15,10 @@
 	},
 	"require" : {
 		"php" : ">=5.4",
-		"keeko/composer-installer" : "*"
+		"keeko/composer-installer" : "*",
+		"bower-asset/bootstrap" : "~3",
+		"bower-asset/font-awesome" : "~4",
+		"gossi/trixionary-client" : "dev-master"
 	},
 	"require-dev" : {
 		"keeko/framework" : "dev-master",
@@ -25,7 +28,8 @@
 		"puli/composer-plugin" : "@beta",
 		"puli/twig-extension" : "@beta",
 		"puli/url-generator" : "@beta",
-		"puli/discovery" : "@beta"
+		"puli/discovery" : "@beta",
+		"gossi/trixionary" : "@dev"
 	},
 	"extra" : {
 		"keeko" : {
