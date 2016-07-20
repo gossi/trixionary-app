@@ -18,7 +18,7 @@
 		"keeko/composer-installer" : "*",
 		"bower-asset/bootstrap" : "~3",
 		"bower-asset/font-awesome" : "~4",
-		"gossi/trixionary-client" : "dev-master"
+		"gossi/trixionary-client" : "^0.2-beta@beta"
 	},
 	"require-dev" : {
 		"keeko/framework" : "dev-master",
