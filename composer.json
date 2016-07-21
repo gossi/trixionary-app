@@ -18,7 +18,8 @@
 		"keeko/composer-installer" : "*",
 		"bower-asset/jquery": "~2.1",
 		"bower-asset/bootstrap" : "~3",
-		"bower-asset/font-awesome" : "~4"
+		"bower-asset/font-awesome" : "~4",
+		"gossi/trixionary-client": "^0.2"
 	},
 	"require-dev" : {
 		"keeko/framework" : "dev-master",
@@ -29,7 +30,7 @@
 		"puli/twig-extension" : "@beta",
 		"puli/url-generator" : "@beta",
 		"puli/discovery" : "@beta",
-		"gossi/trixionary" : "@dev"
+		"gossi/trixionary-client" : "@dev"
 	},
 	"extra" : {
 		"keeko" : {
