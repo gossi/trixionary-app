@@ -29,8 +29,7 @@
 		"puli/composer-plugin" : "@beta",
 		"puli/twig-extension" : "@beta",
 		"puli/url-generator" : "@beta",
-		"puli/discovery" : "@beta",
-		"gossi/trixionary-client" : "@dev"
+		"puli/discovery" : "@beta"
 	},
 	"extra" : {
 		"keeko" : {
