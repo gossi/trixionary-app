@@ -16,10 +16,10 @@
 	"require" : {
 		"php" : ">=5.4",
 		"keeko/composer-installer" : "*",
-		"bower-asset/jquery": "~2.1",
+		"bower-asset/jquery" : "~2.1",
 		"bower-asset/bootstrap" : "~3",
 		"bower-asset/font-awesome" : "~4",
-		"gossi/trixionary-client": "^0.2"
+		"gossi/trixionary-client" : "dev-master"
 	},
 	"require-dev" : {
 		"keeko/framework" : "dev-master",
